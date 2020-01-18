@@ -52,5 +52,42 @@ module.exports = {
         }
         
     return res.json(dev);
+    },
+
+    async update(req, res){
+        console.log(req.params);
+        
+        const {github_username} = req.params;
+        let {name, bio, avatar_url} = req.body;
+        console.log(github_username);
+        
+        const dev = await Dev.find({
+            github_username : {
+                $eq : github_username,
+            }
+        });
+        console.log(dev);
+
+        name = name==null? dev.name : name;
+        console.log(dev.name);
+        bio = bio==null? dev.bio : bio;
+        console.log(dev.bio);
+        avatar_url = avatar_url==null? dev.avatar_url : avatar_url;
+        
+        
+        const newDev = await Dev.findOneAndUpdate({
+            github_username:{
+                $eq : github_username,
+                },
+            },
+            
+        { name : name,
+            bio:bio,
+            avatar_url:avatar_url
+            });
+
+        
+        
+        return res.json({newDev});
     }
 }

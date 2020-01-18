@@ -20,6 +20,8 @@ routes.post('/devs', DevController.store);
 
 routes.get('/devs', DevController.index);
 
+routes.put('/devs/:github_username', DevController.update);
+
 routes.get('/search', SearchController.index)
 
 

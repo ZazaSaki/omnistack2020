@@ -15,15 +15,11 @@ module.exports = {
         //Filtrando por tecnologia
         
         
-        const devs = Dev.find();
-        console.log(devs);
-        return res.json(devs);
-        
-        /*{
+        const devs = await Dev.find({
             techs:{
                 $in: techsArray,
             },
-            /*
+            
             location:{
                 $near:{
                     $geometry: {
@@ -32,8 +28,9 @@ module.exports = {
                     },
                     $maxDistance: 10000,
                 },
-            },}//*/
-        //*/
+            },});
+        console.log(devs);
+        return res.json(devs);
         
     }
 }
