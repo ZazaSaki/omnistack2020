@@ -4,14 +4,22 @@ import './global.css';
 import './App.css';
 import './Sidebar.css';
 import './Main.css';
+import './services/api';
+import api from './services/api';
 
 //Componente Chamado App
 function App() {
-  const [latutide, setLatitude] = useState('');
+  //lista de devs
+  const [devs, setDevs] =useState([]);
+
+  //variaveis de registro
+  const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [github_username, setGithubUsername] = useState('');
   const [techs, setTechs] = useState('');
   
+
+  //localização do utilizador atravez da api do google
   useEffect(()=>{
     navigator.geolocation.getCurrentPosition(
       (position)=>{
@@ -27,10 +35,34 @@ function App() {
         timeout : 30000,
       }
   )}, []);
+
+  useEffect(()=>{
+    async function loadDevs(){
+      const res = await api.get('/devs');
+      setDevs(res.data);
+    }
+    
+    loadDevs();
+  },[]);
   
   async function handleAddDev(e){
     e.preventDefault();
     
+    //post do dev no servidor
+    const res = await api.post('/devs',{
+      github_username,
+      techs,
+      latitude,
+      longitude
+    })
+
+    //reset dos campos preenchidos
+    setGithubUsername('');
+    setTechs('');
+
+    setDevs([...devs, res.data]);
+
+    console.log(res.data);
   }
   
   return (
@@ -66,7 +98,7 @@ function App() {
             type = "number" 
             name="Latitude" 
             id="Latitude" 
-            required value = {latutide} 
+            required value = {latitude} 
             onChange = {e => setLatitude(e.target.value)} />
           </div>
           
@@ -88,53 +120,20 @@ function App() {
       </aside>
       <main>
         <ul>
-          <li className = "dev-item">
-            <header>
-              <img src="https://avatars0.githubusercontent.com/u/59056168?s=460&v=4" alt = "ZazaSaki"></img>
-              <div className = "user-info">
-                <strong>ZazaSaki</strong>
-                <span>C#, Java</span>
-              </div>
-            </header>
-            <p>Aqui fica a bio</p>
-            <a href = "https://github.com/ZazaSaki">Github</a>
-          </li>
+          {devs.map(dev =>(
+            <li key={dev._id} className = "dev-item">
+              <header>
+                <img src= {dev.avatar_url} alt = {dev.name}></img>
+                <div className = "user-info">
+                  <strong>{dev.name}</strong>
+                  <span>{dev.techs.join(',')}</span>
+                </div>
+              </header>
+              <p> {dev.bio} </p>
+              <a href = {`https://github.com/${dev.github_username}`}>Github</a>
+            </li>))}
 
-          <li className = "dev-item">
-            <header>
-              <img src="https://avatars0.githubusercontent.com/u/59056168?s=460&v=4" alt = "ZazaSaki"></img>
-              <div className = "user-info">
-                <strong>ZazaSaki</strong>
-                <span>C#, Java</span>
-              </div>
-            </header>
-            <p>Aqui fica a bio</p>
-            <a href = "https://github.com/ZazaSaki">Github</a>
-          </li>
-
-          <li className = "dev-item">
-            <header>
-              <img src="https://avatars0.githubusercontent.com/u/59056168?s=460&v=4" alt = "ZazaSaki"></img>
-              <div className = "user-info">
-                <strong>ZazaSaki</strong>
-                <span>C#, Java</span>
-              </div>
-            </header>
-            <p>Aqui fica a bio, tipo memo bueda texto bro para dar tipo duas linhas À MACHO ALPHA</p>
-            <a href = "https://github.com/ZazaSaki">Github</a>
-          </li>
-
-          <li className = "dev-item">
-            <header>
-              <img src="https://avatars0.githubusercontent.com/u/59056168?s=460&v=4" alt = "ZazaSaki"></img>
-              <div className = "user-info">
-                <strong>ZazaSaki</strong>
-                <span>C#, Java</span>
-              </div>
-            </header>
-            <p>Aqui fica a bio</p>
-            <a href = "https://github.com/ZazaSaki">Github</a>
-          </li>
+          
         </ul>
         
       </main>
