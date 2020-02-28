@@ -9,10 +9,23 @@ const Routes = createAppContainer(
         Main:{
             screen : Main,
             navigationOptions:{
-                title: "This is the title M8",
+                title: "Dev Radar",
             }
         },
-        Profile
+        Profile:{
+            screen: Profile,
+            navigationOptions:{
+                title:"Perfil",
+            }
+        }
+    },{
+        defaultNavigationOptions:{
+            headerBackTitleVisible:false,
+            headerTintColor : "#fff",
+            headerStyle:{
+                backgroundColor : "#7d40e7",
+            }
+        }
     })
 );
 
