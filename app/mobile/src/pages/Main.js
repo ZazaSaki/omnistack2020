@@ -10,6 +10,7 @@ function Main({navigation}){
 
     const [devs, SetDevs] = useState([]);
     const[currentRegion, setCurrentRegion] = useState(null);
+    const[techs, setTechs] = useState([]);
     
     useEffect(()=>{
         async function loadInicialPosition(){
@@ -43,7 +44,7 @@ function Main({navigation}){
             params:{
                 latitude,
                 longitude,
-                techs:"C#"
+                techs
             }
         });
 
@@ -98,6 +99,8 @@ function Main({navigation}){
                         placeholderTextColor = "#999"
                         autoCapitalize = "words"
                         autoCorrect = {false} 
+                        value = {techs}
+                        onChangeText = {setTechs}
                     ></TextInput>
 
                     <TouchableOpacity onPress={loadDevs} style = {styles.loadButton} >
